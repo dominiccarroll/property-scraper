@@ -36,9 +36,9 @@ const scraperObject = {
                 dataObj['owner'] = await newPage.$eval('#ContentPlaceHolder1_Base_fvDataProfile_OwnerLabel', text => text.textContent);
                 dataObj['parcel'] = await newPage.$eval('#ContentPlaceHolder1_Base_fvDataProfile_ParcelLabel', text => text.textContent);
                 dataObj['address'] = await newPage.$eval('#ContentPlaceHolder1_Base_fvDataProfile_AddressLabel', text => text.textContent);
-                dataObj['mailing_address'] = await newPage.$eval('#ContentPlaceHolder1_Base_fvDataMailingAddress_MailingAddressLine2Label', text => text.textContent);
-                dataObj['acres'] = await newPage.$eval('#ContentPlaceHolder1_Base_fvDataLegal_AcresLabel', text => text.textContent);
-                dataObj['land_use_code'] = await newPage.$eval('#ContentPlaceHolder1_Base_fvDataLegal_LandUseCodeLabel', text => text.textContent);
+                dataObj['mailing_address'] = await newPage.$eval('#ContentPlaceHolder1_Base_fvDataMailingAddress_MailingAddressLine1Label', text => text.textContent);
+                dataObj['acres'] = await newPage.$eval('#ContentPlaceHolder1_Base_fvDataLegal_TotalAcresLabel', text => text.textContent);
+                dataObj['land_use_code'] = await newPage.$eval('#ContentPlaceHolder1_Base_fvDataLegal_LandUseDescriptionLabel', text => text.textContent);
 
                 
                 // console.log(dataObj['owner']);
@@ -59,10 +59,10 @@ const scraperObject = {
 
                 // await newPage.click('#ContentPlaceHolder1_mnuDatan5 > a');
                 newPage.evaluate(function() {
-                    __doPostBack("ctl00$ContentPlaceHolder1$mnuData",'5');
+                    __doPostBack('ctl00$ContentPlaceHolder1$mnuData','5');
                 });
 
-                await newPage.waitForSelector('#ContentPlaceHolder1_Tax_fvDataProfile_ParcelLabel');
+                await newPage.waitForSelector('#ContentPlaceHolder1_Tax_fvDataTax_Label54');
                 
                 // dataObj['tax_balance'] = await newPage.$$eval('.formview', text => {
                 //     let nodes = text.querySelectorAll('tr');
@@ -72,7 +72,7 @@ const scraperObject = {
 
                 let taxBalance = 0;
                 try{
-                    taxBalance = await newPage.$eval('#ContentPlaceHolder1_Tax_fvDataTaxBill_Label', text => text.textContent);
+                    taxBalance = await newPage.$eval('#ContentPlaceHolder1_Tax_fvDataTax_Label54', text => text.textContent);
                 }
                 catch(err){
                     taxBalance = 0;
@@ -82,12 +82,12 @@ const scraperObject = {
 
 
                 newPage.evaluate(function() {
-                    __doPostBack('ctl00$ContentPlaceHolder1$mnuData','2');
+                    __doPostBack('ctl00$ContentPlaceHolder1$mnuData','1');
                 });
 
-                await newPage.waitForSelector('#ContentPlaceHolder1_Valuation_fvDataValuation_AppraisedTotalValueLabel');
+                await newPage.waitForSelector('#ContentPlaceHolder1_Land_fvDataLandTotals_ValueTotalLabel');
 
-                dataObj['appraised_value'] = await newPage.$eval('#ContentPlaceHolder1_Valuation_fvDataValuation_AppraisedLandValueLabel', text => text.textContent);
+                dataObj['appraised_value'] = await newPage.$eval('#ContentPlaceHolder1_Land_fvDataLandTotals_ValueTotalLabel', text => text.textContent);
                 
                  
 
@@ -135,7 +135,7 @@ const scraperObject = {
         console.log(data);
         const ObjectsToCsv = require('objects-to-csv')
         const csv = new ObjectsToCsv(data)
-        await csv.toDisk('./vinton-oh.csv')
+        await csv.toDisk('./portage-oh.csv')
 
         return data;
 
