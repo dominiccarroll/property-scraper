@@ -1,5 +1,3 @@
-const {TimeoutError} = require('puppeteer/Errors');
-
 const scraperObject = {
     url: 'https://portageoh-auditor-classic.ddti.net/Results.aspx?SearchType=Advanced&Criteria=20g%2byYTTdkDLNtXc5FvcXQYubfrmxFczaOTvKdWzsVc2Qgz%2bQp%2f7sUhy7RYpQ%2fsthlIZxfmXGg749SAoPJwmbQKOgJwjn2QrC0HWhwtxVylHc4OkdonUnTzGwPMwYemzaMKrGoHFnvbzSLc3PdYEQkkh4XXJ6Gvq3DaMDeCfCbbk%2beZQ5j9JeAfr2bkdsuX8nLnxhBIb2ywmXSGz9fXjA4v5CBEclyU9yNFNWRLp0ISinX4yFaHR1Tpbk3g1vFddymrpVnDvdQjijA%2b75QMVN3s1zQ0dZLs2CUKdSVwYlSTuvFO6gJ2CyKXKO5K8h0257zn0FXeeTvZ0bQ1WiQ%2fRoPTAcM3EaF74Fot3zwGAZTKULxH6Hdftm%2fAFbAlbB%2f5r3qybIp9grhULk0%2fF4wdv2Sl2Sqrv60tIRCaCOqqVANmP8a%2f0zDt5N5tJVv9CUML3qUct7Kg%2bqqYEopqMU2X6VAgWUwGFroIg9gweibot0FzXgXLX98BVkZbq%2bMbWbf8XLGG7fnhpBtivUjPdswD4rk69JAqxeJxb7ss%2fqRaVjgwla20Dbsqx8L7ZoXr98dG5%2bHWX5pmrELJBLuECUqIc%2fA%3d%3d',
     async scraper(browser){
@@ -64,14 +62,8 @@ const scraperObject = {
                     __doPostBack('ctl00$ContentPlaceHolder1$mnuData','5');
                 });
 
-                let taxInfoAvailable = true;
-                try {
-                    await newPage.waitForSelector('#ContentPlaceHolder1_Tax_fvDataTax_Label54', {timeout: 5000});
-                } catch (e) {
-                    if (e instanceof TimeoutError) {
-                        taxInfoAvailable = false;
-                    }
-                }
+                await newPage.waitForSelector('#ContentPlaceHolder1_Tax_fvDataTax_Label54', {timeout: 5000});
+
                 
                 // dataObj['tax_balance'] = await newPage.$$eval('.formview', text => {
                 //     let nodes = text.querySelectorAll('tr');
@@ -80,14 +72,7 @@ const scraperObject = {
                 // });
 
                 let taxBalance = 0;
-                if (taxInfoAvailable) {
-                    try{
-                        taxBalance = await newPage.$eval('#ContentPlaceHolder1_Tax_fvDataTax_Label54', text => text.textContent);
-                    }
-                    catch(err){
-                        taxBalance = 0;
-                    }
-                }
+                taxBalance = await newPage.$eval('#ContentPlaceHolder1_Tax_fvDataTax_Label54', text => text.textContent);
                 
 
                 dataObj['tax_balance'] = taxBalance;
